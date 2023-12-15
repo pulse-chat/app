@@ -3,4 +3,5 @@ this is pulse app
 
 wow
 
-[donate](https://paypal.me/xyqn) to me pls
+[donate](https://paypal.me/xyqn) to the pulse team
+
