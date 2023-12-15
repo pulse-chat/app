@@ -1,0 +1,8 @@
+{
+  "name": "Pulse",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite",
+  "id": "568a6206"
+}
