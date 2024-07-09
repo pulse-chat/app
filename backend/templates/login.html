@@ -110,8 +110,6 @@
                 .then(data => {
                     console.log("Hobbies sent:" + data.hobbies + ". Length: " + data.hobbies.length);
                     if(data.hobbies.length == 0){
-                        window.location.replace("hobbies_select.html");
-                    }else{
                         window.location.replace("index.html");
                     }
                 })

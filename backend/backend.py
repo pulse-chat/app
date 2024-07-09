@@ -48,7 +48,6 @@ def register():
     data["users"][username] = {
         "email": email,
         "password": hash_password,
-        "hobbies": [],
         "decks": {"Japanese": [{"front": "Hello", "back": "World"}, {"front": "Foo", "back": "Bar"}, {"front": "Front", "back": "Back"}], "French": [{"front": "Bonjour", "back": "World"}, {"front": "Goodies", "back": "Bar"}, {"front": "Frontier", "back": "Back"}], "Bulgarian" : [{"front": "Zdrasti", "back": "Svqt"}, {"front": "Bla", "back": "Bar"}, {"front": "Otpred", "back": "Otzad"}]},
         "description": ""
     }
@@ -83,11 +82,24 @@ def login():
 @cross_origin()
 def regenerate_token():
     req_data = request.get_json()
-    myid = int(req_data["myid"])
-    token = req_data["token"]
+    myid = req_data.get("myid")  # Use get() to safely retrieve myid
+    token = req_data.get("token")
+
+    if myid is None:
+        return "myid is missing in the request", 400
+
+    try:
+        myid = int(myid)
+    except ValueError:
+        return "myid must be an integer", 400
+
+    if token is None:
+        return "token is missing in the request", 400
+
     valid_code = validate_token(myid, token)
     if valid_code != 200:
-        return "Unknown error occured", valid_code
+        return "Invalid token or myid", valid_code
+
     return jsonify({"token": generate_token(myid), "myid": myid})
 
 @app.route("/send_message", methods=["POST"])
@@ -104,7 +116,7 @@ def send_message():
         return "Token cannot be found", 401
     
     if valid_code != 200:
-        return "Unknown error occured", valid_code
+        return "Unknown error occurred", valid_code
     
     if clubname not in data["clubs"]:
         return "Club not found", 404
@@ -139,7 +151,7 @@ def get_message():
         return "Token cannot be found", 401
     
     if valid_code != 200:
-        return "Unknown error occured", valid_code
+        return "Unknown error occurred", valid_code
     
     if clubname not in data["clubs"]:
         return "Club not found", 404
@@ -171,7 +183,6 @@ def create_club():
         json.dump({"messages": []}, file)
     with open("data.json", "w") as file:
         json.dump(data, file)
-    data["users"][list(data["users"].keys())[myid]]["hobbies"].append(clubname)
     return jsonify(data["clubs"])
 
 @app.route("/add_user_to_club", methods=["POST"])
@@ -185,10 +196,9 @@ def add_user_to_club():
         valid_code = validate_token(myid, token)
     except:
         return "Token cannot be found", 401
-    print(valid_code, myid, token)
 
     if valid_code != 200:
-        return "Unknown error occured", valid_code
+        return "Unknown error occurred", valid_code
     
     for clubs in clubname:
         if clubs not in data["clubs"]:
@@ -214,7 +224,7 @@ def add_description_to_user():
         return "Token cannot be found", 401
     
     if valid_code != 200:
-        return "Unknown error occured", valid_code
+        return "Unknown error occurred", valid_code
     data["users"][list(data["users"].keys())[myid]]["description"] = description
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -256,8 +266,8 @@ def get_decks():
         return "Token cannot be found", 401
     
     if valid_code != 200:
-        return "Unknown error occured", valid_code
-    
+        return "Unknown error occurred", valid_code
+
     return jsonify(data["users"][list(data["users"].keys())[myid]]["decks"])
 
 @app.route("/set_decks", methods=["POST"])
@@ -273,13 +283,11 @@ def set_decks():
         return "Token cannot be found", 401
     
     if valid_code != 200:
-        return "Unknown error occured", valid_code
+        return "Unknown error occurred", valid_code
     
     data["users"][list(data["users"].keys())[myid]]["decks"] = decks
-
     with open("data.json", "w") as file:
         json.dump(data, file)
-
     return jsonify(data["users"][list(data["users"].keys())[myid]]["decks"])
 
 if __name__ == "__main__":
