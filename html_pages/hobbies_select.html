@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hobbies_select</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+    extend: {
+      colors:{
+        'primary': '#423bc8',
+        'secondary': '#c5c2f6',
+        'accent': '#ffbc86',
+        'background': '#26253b',
+        'text': '#e2e8f0'
+      }
+    },
+  },
+  plugins: [],
+}
+
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+      * {
+        font-family: 'Poppins', sans-serif;
+      }
+    </style>
+</head>
+<body>
+    <body>
+        <div class="bg-background h-lvh flex grow-0 items-center justify-center ">
+            <div class="flex-col flex-shrink-0 bg-white rounded-lg p-4 shadow-lg w-full h-full md:w-1/4 md:h-auto">
+                <h2 class="text-center mb-4">Select a Hobby</h2>
+                <div id="hobby-button-group" class="flex-none space-y-2"></div>
+                <div id="selected-button-group" class="mt-4 mb-4 rounded-lg p-4">
+                    <h2 class="text-center mb-4">Selected</h2>
+                </div class>
+                <div class = "flex justify-center items-center">
+                <button id="checkmark-button" class="w-12 h-12 bg-primary text-white rounded-full p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 m-auto">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
+                </div>
+        </div>
+        <script>
+            const hobbyButtonGroup = document.getElementById('hobby-button-group');
+
+            function hideButton(button) {
+                const selectedButtonGroup = document.getElementById('selected-button-group');
+
+                if (button.parentNode === hobbyButtonGroup) {
+                    button.parentNode.removeChild(button);
+                    selectedButtonGroup.appendChild(button);
+                    button.classList.remove('primary');
+                    button.classList.add('background');
+                } else if (button.parentNode === selectedButtonGroup) {
+                    button.parentNode.removeChild(button);
+                    hobbyButtonGroup.appendChild(button);
+                    button.classList.remove('background');
+                    button.classList.add('primary');
+                }
+            }
+
+        fetch('http://127.0.0.1:5000/get_clubs')
+            .then(response => response.json())
+            .then(data => {
+                const hobbyButtonGroup = document.getElementById('hobby-button-group');
+                data.forEach(club => {
+                    const button = document.createElement('button');
+                    button.className = 'w-full bg-blue-500 text-white mb-2 rounded-xl py-2';
+                    button.textContent = club;
+                    button.onclick = function() {
+                        hideButton(this);
+                    };
+                    hobbyButtonGroup.appendChild(button);
+                });
+            })
+        .catch(error => console.error(error));
+
+        document.getElementById("checkmark-button").onclick = function() {
+            const selectedButtonGroup = document.getElementById('selected-button-group');
+            data = {
+                "token": localStorage.getItem("token"),
+                "myid": localStorage.getItem("myid"),
+                "clubname": []
+            }
+            for (let i = 1; i < selectedButtonGroup.children.length; i++) {
+                data.clubname.push(selectedButtonGroup.children[i].textContent);
+            }
+            fetch("http://127.0.0.1:5000/add_user_to_club", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Hobbies sent:", data);
+                window.location.replace("index.html");
+            })
+            .catch(error => {
+                console.error("Hobbies failed me:", error);
+            });
+        }
+        </script>
+    </body>
+    </html>
+</body>
+</html>

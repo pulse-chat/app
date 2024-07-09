@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUESconnect - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+    extend: {
+      colors:{
+        'primary': '#423bc8',
+        'secondary': '#c5c2f6',
+        'accent': '#ffbc86',
+        'background': '#26253b',
+        'text': '#e2e8f0'
+      }
+    },
+  },
+
+  plugins: [],
+}
+
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+      * {
+        font-family: 'Poppins', sans-serif;
+      }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen py-40" style="background-image: linear-gradient(115deg, #26253b, #ffbc86);">
+          <div class="flex w-8/12 bg-white rounded-xl mx-auto">
+            <!--Mobile registration-->
+            <div id="mobile-registration" class="flex sm:hidden">
+                <div class="flex-initial py-16 px-12">
+                    <h2 class="text-3xl mb-4">Register</h2>
+                    <p class="mb-4">This may take a minute</p>
+                    <div class="mb-5">
+                        <label for="Username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your username</label>
+                        <input type="username" id="username_mobile" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>
+                    <div class="mb-5">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                        <input type="email" id="email_mobile" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="example@gmail.com" required />
+                    </div>
+                    <div class="mb-5">
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+                        <input type="password" id="password_mobile" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>
+                    <button onclick="register_mobile()" class="bg-primary text-white rounded-lg px-4 py-2">
+                        Register
+                    </button>
+                </div>
+            </div>
+            <!--Desktop registration-->
+            <div id="desktop-registration" class="hidden sm:flex">
+            <div class="flex-none w-1/2 grid place-items-center">
+                <img src="./images/elsys_logo.png">
+            </div>
+            <div class="flex-initial w-1/2 py-16 px-12">
+                <h2 class="text-3xl mb-4">Register</h2>
+                <p class="mb-4">This may take a minute</p>
+                <div class="mb-5">
+                    <label for="Username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your username</label>
+                    <input type="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                </div>
+                <div class="mb-5">
+                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+                    <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="example@gmail.com" required />
+                </div>
+                <div class="mb-5">
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+                    <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                </div>
+                <button onclick="register()"class="bg-primary text-white rounded-lg px-4 py-2">
+                    Register
+                </button>
+                </div>
+                </div>
+                </div>
+                </div> 
+                <script>
+                    function register() {
+                        var username = document.getElementById("username").value;
+                        var email = document.getElementById("email").value;
+                        var password = document.getElementById("password").value;
+
+                        var data = {
+                            username: username,
+                            email: email,
+                            password: password
+                        };
+
+                        fetch("http://127.0.0.1:5000/register", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Registration successful:", data);
+                            window.location.replace("login.html");
+                        })
+                        .catch(error => {
+                            console.error("Registration failed:", error);
+                        });
+                    }
+                    function register_mobile() {
+                        var username = document.getElementById("username_mobile").value;
+                        var email = document.getElementById("email_mobile").value;
+                        var password = document.getElementById("password_mobile").value;
+
+                        var data = {
+                            username: username,
+                            email: email,
+                            password: password
+                        };
+
+                        fetch("http://127.0.0.1:5000/register", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Registration successful:", data);
+                            window.location.replace("login.html");
+                        })
+                        .catch(error => {
+                            console.error("Registration failed:", error);
+                        });
+                    }
+                </script>
+    </script>
+</body>
+</html>

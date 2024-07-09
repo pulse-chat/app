@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chats</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+                tailwind.config = {
+                        theme: {
+        extend: {
+            colors:{
+                'primary': '#423bc8',
+                'secondary': '#c5c2f6',
+                'accent': '#ffbc86',
+                'background': '#26253b',
+                'text': '#e2e8f0',
+                'lighter-blue': '#494770'
+
+            }
+        },
+    },
+    plugins: [],
+}
+
+        </script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+        <style>
+          * {
+            font-family: 'Poppins', sans-serif;
+          }
+        </style>
+</head>
+    <body>
+        <div class="flex h-screen bg-background p-4">
+                <!-- Chat list -->
+                <div class="flex flex-col w-64 border-r border-lighter-blue px-4 py-6">
+                    <div class="rounded-lg bg-lighter-blue mb-4">
+                        <h2 class="flex justify-center items-center mt-3 text-text text-3xl pb-4">Clubs</h2>
+                 </div>
+                    <div id="chats-list" class="flex-grow overflow-y-auto">
+                    </div>
+                </div>
+                <!-- Chat content -->
+                <div class="flex flex-col flex-grow">
+                        <!-- Message list -->
+                        <div class="overflow-y-auto p-4 space-y-4">
+                            <div id="messages-div" class="overflow-y-auto overflow-auto"> 
+                            </div>
+                            <button id="scroll-to-bottom" class="fixed right-4 bottom-4 bg-primary text-white rounded-full p-2">
+                                ↓ 
+                              </button>
+                        <!-- Message input -->
+                        <div class="border-t border-lighter-blue bg-background p-4">
+                            <input id="message-input" class="w-full rounded-lg bg-lighter-blue text-white px-4 py-2" placeholder="Type a message">
+                        </div>
+                    </div>
+            </div>
+            <script>
+                function isEmptyOrSpaces(str){
+                  return str === null || (/^\s*$/).test(str);
+                }
+                let selectedClub = ""; // Declare the selectedClub variable and assign a default value
+                localStorage.setItem("last_msg_ts", 0);
+                fetch("http://127.0.0.1:5000/get_user", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({"myid":localStorage.getItem("myid")})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Clubs fetched:", data.hobbies);
+                        var chatsList = document.getElementById("chats-list");
+                        selectedClub = data.hobbies[0];
+                        data.hobbies.forEach(message => {
+                            // Define the HTML template
+                            
+                            var buttonTemplate = `
+                                <button onclick="switchClub(this)" class="w-full text-left text-text px-4 py-10 rounded-xl border border-lighter-blue bg-primarys bg-opacity-50 mb-4 hover:bg-primary">${message}</button>
+                            `;
+
+                            // Append the template to the div
+                                chatsList.innerHTML += buttonTemplate;
+                        });
+                    })
+                    .catch(error => {
+                        console.error("Unable to fetch clubs:", error);
+                    });
+                function switchClub(button) {
+                    selectedClub = button.textContent;
+                    var messagesDiv = document.getElementById("messages-div");
+                    messagesDiv.innerHTML = "";
+                    localStorage.setItem("last_msg_ts", 0);
+                    console.log("Selected club:", selectedClub);
+                }
+                function fetchMessages() {
+                    console.log(selectedClub)
+                    var initMessage = document.getElementById("message-input").value;
+                    data = {
+                        "myid" : localStorage.getItem("myid"),
+                        "token": localStorage.getItem("token"),
+                        "last_msg_ts": localStorage.getItem("last_msg_ts"),
+                        "clubname": selectedClub
+                    }
+                    fetch("http://127.0.0.1:5000/get_message", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.length > 0){
+                        console.log("Messages fetched:", data);
+                        var messagesDiv = document.getElementById("messages-div");
+                        data.forEach(message => {
+                            let username;
+                    fetch("http://127.0.0.1:5000/get_user", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({"myid":message.myid})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Define the HTML template
+                        var messageTemplateOutgoing = `
+                                    <div class="flex items-end space-x-2 justify-end mt-2">
+                                            <div class="flex-none">
+                                            </div>
+                                            <div class="bg-gray-300 rounded-lg px-4 py-2">${message.message}</div>
+                                    </div>
+                            `;
+                            var messageTemplateIncoming = `
+                                    <p class="text-white font-bold mt-2">${data.username}</p>
+                                    <div class="flex items-end space-x-2 mt-2">
+                                            <div class="flex-none">
+                                            </div>
+                                            <div class="bg-lighter-blue text-text rounded-xl px-4 py-2">${message.message}</div>
+                                    
+                                    </div>
+                            `;
+
+                            // Append the template to the div
+                            if (message.myid == localStorage.getItem("myid")) {
+                                messagesDiv.innerHTML += messageTemplateOutgoing;
+                            } else {
+                                messagesDiv.innerHTML += messageTemplateIncoming;
+                            }
+                            document.getElementById('message-input').scrollIntoView({ behavior: 'smooth' });
+                    })
+                    .catch(error => {
+                        console.error("Unable to fetch user:", error);
+                    });
+                        });
+                        localStorage.setItem("last_msg_ts", data[data.length - 1].timestamp);
+                    }
+                    })
+                    .catch(error => {
+                        if (error.toString().includes("JSON.parse")) {
+                            console.log("Unauthorized");
+                            window.location.replace("login.html");
+                        } else {
+                            console.error("Unable to send message:", error);
+                        }
+                    });
+                    fetch("http://127.0.0.1:5000/regenerate_token", {
+                                method: "POST",
+                                headers: {
+                                        "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({"token": localStorage.getItem("token"), "myid": localStorage.getItem("myid")})
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                                localStorage.setItem("token", data.token);
+                                localStorage.setItem("myid", data.myid);
+                                console.log("Regeneration successful:", data);
+                        })
+                        .catch(error => {
+                                console.error("Regeneration failed:", error);
+                        });
+                }
+
+                // Execute the fetchMessages function every 1/2 second (no better way to do this in this time frame and skills)
+                setInterval(fetchMessages, 500);
+                document.getElementById("message-input").addEventListener("keyup", function(event) {
+                        if (event.key === "Enter") {
+                                var message = document.getElementById("message-input").value;
+                                if(!isEmptyOrSpaces(message)){
+                                document.getElementById("message-input").value = "";
+                                data = {
+                                    "message": message,
+                                    "token": localStorage.getItem("token"),
+                                    "myid": localStorage.getItem("myid"),
+                                    "clubname": selectedClub
+                                }
+                                fetch("http://127.0.0.1:5000/send_message", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    },
+                                    body: JSON.stringify(data)
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log("Message sent:", data);
+                                    // Get the div with myid "messages-div"
+                                    var messagesDiv = document.getElementById("messages-div");
+                                    // Define the HTML template
+                                    var messageTemplate = `
+                                            <div class="flex items-end space-x-2 justify-end mt-2">
+                                                    <div class="flex-none">
+                                                    </div>
+                                                    <div class="bg-gray-300 rounded-lg px-4 py-2">${message}</div>
+                                            </div>
+                                    `;
+                                        
+                                    // Append the template to the div
+                                    messagesDiv.innerHTML += messageTemplate;
+                                    document.getElementById('message-input').scrollIntoView({ behavior: 'smooth' });
+                                    localStorage.setItem("last_msg_ts", data.timestamp);
+                                })
+                                .catch(error => {
+                                    console.error("Unable to send message:", error);
+                                });
+                              }
+                        }
+                });
+                document.getElementById('scroll-to-bottom').addEventListener('click', function() {
+                    document.getElementById('message-input').scrollIntoView({ behavior: 'smooth' });
+                });
+
+                var observer = new IntersectionObserver(function(entries) {
+                if (entries[0].isIntersecting) {
+                document.getElementById('scroll-to-bottom').style.display = 'none';
+                } else {
+                document.getElementById('scroll-to-bottom').style.display = 'block';
+                }
+            });
+
+            observer.observe(document.getElementById('message-input'));
+
+            window.onload = function(){
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+            </script>
+ </body>
+ </html>
+</html>

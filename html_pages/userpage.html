@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Userpage</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary': '#423bc8',
+            'secondary': '#c5c2f6',
+            'accent': '#ffbc86',
+            'background': '#26253b',
+            'text': '#e2e8f0',
+            'csky': '#91d7e3',
+            'csky400': '#8da3af',
+          }
+        },
+      },
+      plugins: [],
+    }
+
+  </script>
+  <script>
+    document.getElementById("tags").clientHeight = document.getElementById("decks").clientHeight;
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-background h-vh">
+    <nav class="bg-background">
+      <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div class="relative flex h-16 items-center justify-between">
+          <div class="absolute inset-y-0 left-0 flex items-center">
+           <!-- Logo Only test for now -->
+           <img src="./images/connect_logo_2.png" class="h-10 w-auto mr-4" onclick="toggleMenu();">
+           <!--Dropdown for phones-->
+           <div id="menu" class="hidden sm:hidden absolute bg-background mt-48">
+             <a id="signouta" href="chats.html" class="text-text rounded-lg px-4 py-2 mx-2 hidden">Chats</a>
+             <a id="signouta" href="decks.html" class="text-text rounded-lg px-4 py-2 mx-2 hidden">Decks</a>
+             <a id="signin" href="registration.html" class="block bg-accent text-black rounded-lg px-4 py-2 mx-2 mb-2 hover:bg-hover-accent">Register</a>
+             <a id="signin" href="login.html" class="block bg-accent text-black rounded-lg px-4 py-2 mx-2 mb-2 hover:bg-hover-accent">Sign In</a>
+             <a id="signout" class="justify-end bg-accent text-black rounded-lg px-4 py-2 hover:bg-hover-accent hidden" onclick="signOut();">Sign Out</a>
+           </div>
+            <!--Nav for large screens-->
+           <div class="hidden sm:flex">
+            <!-- Rounded buttons -->
+            <a id="signout" href="chats.html" class=" text-text rounded-lg px-4 py-2 mx-2 hidden">Chats</a>
+            <a id="signout" href="decks.html" class = "text-text rounded-lg px-4 py-2 mx-2 hidden">My decks</a>
+            <!-- Spacer -->
+            <div class="flex-grow"></div>
+            <!-- Sign in button and registration -->
+            <a id="signin" href="registration.html" class="flex justify-end bg-accent text-black rounded-lg px-4 py-2 mr-2 hover:bg-hover-accent">Register</a>
+            <a id="signin" href="login.html" class="flex justify-end bg-accent text-black rounded-lg px-4 py-2 hover:bg-hover-accent">Sign In</a>
+            <a id="signout" class="justify-end bg-accent text-black rounded-lg px-4 py-2 hover:bg-hover-accent hidden" onclick="signOut();">Sign Out</a>
+           </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div>
+      <div class="w-10/12 h-32 flex justify-center bg-accent rounded-xl mx-auto place-items-center">
+      </div>
+      <div class="w-10/12 mb-10 flex justify-center rounded-xl mx-auto place-items-center" style="margin-top: -100px;">
+        <img class="size-32 rounded-full self-end" src="images/defaultUserIcon.png" alt="icon">
+      </div>
+      <div class="h-[100dvh] w-10/12 flex justify-center rounded-xl mx-auto place-items-center">
+        <div id="div1"
+          class="w-[100%] h-[100%] mr-10 mx-auto bg-secondary rounded-xl place-items-center p-2 pt-4">
+          <div id="interests" class="flex place-items-start flex-wrap">
+            <!--<p class="mt-2 ml-4">Tags:</p>-->
+          </div>
+          <p id="description" class="text-black text-start text-wrap p-8"></p>
+        </div>
+        <!--<div id="div2"
+          class="w-4/12 flex-1 h-[100%] mx-auto my-auto bg-secondary rounded-xl place-items-center place-self-start">
+          <p class="">User decks:</p>
+          <br>
+          <a href="#" class="mx-4 m-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
+            exercitationem enim reiciendis facere, odio pariatur.</a>
+          <br>
+          <a href="#" class="mx-4 m-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
+            exercitationem enim reiciendis facere, odio pariatur.</a>
+          <br>
+          <a href="#" class="mx-4 m-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
+            exercitationem enim reiciendis facere, odio pariatur.</a>
+          <br>
+          <a href="#" class="mx-4 m-4">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellendus
+            exercitationem enim reiciendis facere, odio pariatur.</a>
+        </div>-->
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  function toggleMenu() {
+    document.getElementById('menu').classList.toggle('hidden');
+  }
+  let classes = ["bg-gradient-to-r from  bg-red-300 to bg-red-400 rounded-3xl  mx-4 mt-2  p-1", "bg-gradient-to-r from bg-green-300 to bg-green-400  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-indigo-300 to bg-indigo-400  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-slate-300 to bg-slate-400  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-emerald-400 to bg-emerald-500  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-amber-100 to bg-amber-200  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-blue-500 to bg-blue-600  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-rose-200 to bg-rose-300  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-yellow-400 to bg-yellow-500  rounded-3xl  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-gray-700 to bg-gray-800  rounded-3xl text-text  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-violet-600 to bg-violet-700  rounded-3xl text-text  mx-4 mt-2 p-1", "bg-gradient-to-r from bg-zinc-600 to bg-zinc-700  rounded-3xl text-text  mx-4 mt-2 p-1"];
+
+  function randomColor() {
+    return classes[Math.floor(Math.random() * classes.length)];
+  }
+
+  fetch("http://127.0.0.1:5000/get_user", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify({"myid":localStorage.getItem("myid")})
+  })
+  .then(response => response.json())
+  .then(data => {
+      console.log("Clubs fetched:", data.hobbies);
+      var interests = document.getElementById("interests");
+      data.hobbies.forEach(message => {
+          // Define the HTML template
+          var tagTemplate = `
+          <a href="#" class="${randomColor()} p-3">#${message}</a>
+          `;
+          // Append the template to the div
+          interests.innerHTML += tagTemplate;
+      });
+
+      var description = document.getElementById("description");
+      description.textContent = data.description;
+  })
+  .catch(error => {
+      console.error("Unable to fetch clubs:", error);
+  });
+  function signOut() {
+    localStorage.clear();
+    location.reload();
+  }
+
+  // Check if "token" is in localStorage
+  if (localStorage.getItem('token')) {
+    // Remove buttons with id "signin"
+    var signinButtons = document.querySelectorAll('#signin');
+    signinButtons.forEach(function(button) {
+      button.remove();
+    });
+
+    // Show Sign Out button
+    var signoutButtons = document.querySelectorAll('#signout');
+    signoutButtons.forEach(function(button) {
+      button.classList.remove('hidden');
+      button.classList.add('flex');
+    });
+    var signoutaButtons = document.querySelectorAll('#signouta');
+    signoutButtons.forEach(function(button) {
+      button.classList.remove('hidden');
+      button.classList.add('block');
+    });
+  }
+</script>
+
+</html>
+
+</html>
