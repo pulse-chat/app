@@ -1,33 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PulseChat</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#1e3a8a',
-                        hoverPrimary: '#1e40af',
-                        secondary: '#93c5fd',
-                        accent: '#3b82f6',
-                        hoverAccent: '#2563eb',
-                        background: '#111827',
-                        darkerBackground: '#000000',
-                        text: '#e5e7eb'
-                    },
-                    fontFamily: {
-                        sans: ['Segoe UI', 'sans-serif'],
-                    }
-                },
-            },
-            plugins: [],
-        }
-    </script>
     <style>
         body {
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
@@ -89,12 +65,32 @@
             font-size: 1.15rem;
         }
 
-        .navbar-links a#chatsLink {
+        .navbar-links a#registerLink {
             background-color: rgba(0, 0, 0, 0.4);
         }
 
-        .navbar-links a#chatsLink:hover {
+        .navbar-links a#registerLink:hover {
             background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .feature-header h1 {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+            background: linear-gradient(to bottom, #ffffff, #dddddd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-header p {
+            font-size: 1.25rem;
         }
 
         .features-container {
@@ -104,23 +100,6 @@
             align-items: center;
             text-align: center;
             flex-grow: 1;
-        }
-
-        .features-container h1 {
-            font-size: 4rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            background: linear-gradient(to bottom, #ffffff, #dddddd);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-fill-color: transparent;
-            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .features-container p {
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
         }
 
         .features {
@@ -137,16 +116,25 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 250px;
             text-align: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 0rem;
         }
 
         .feature h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+            font-size: 1.20rem;
+            margin-bottom: -0.5rem;
         }
 
         .feature p {
-            font-size: 1rem;
+            font-size: 1.05rem;
         }
 
         .register-button {
@@ -158,53 +146,53 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             margin-top: 2rem;
+            text-decoration: none;
         }
 
         .register-button:hover {
             background-color: rgba(0, 0, 0, 0.5);
         }
-
-        .hidden {
-            display: none;
-        }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
-
-<body class="font-sans">
+<body>
     <nav class="navbar">
         <div class="navbar-brand">
             <img src="./images/logopulse.png" alt="PulseChat Logo" onclick="toggleMenu();" />
         </div>
         <div class="navbar-links">
-            <a id="loginLink" href="login.html" class="hidden">Login</a>
-            <a id="registerLink" href="registration.html" class="hidden">Register</a>
-            <a id="chatsLink" href="chats.html" class="hidden">Chats</a>
-            <a id="signOutButton" href="#" onclick="signOut();" class="hidden">Sign Out</a>
+            <a id="loginLink" href="login.html">Login</a>
+            <a id="registerLink" href="registration.html">Register</a>
         </div>
     </nav>
 
     <div class="features-container">
-        <h1>Pulse</h1>
-        <p>The awesome sauce Discord replacement.</p>
+        <div class="feature-header">
+            <h1>Pulse</h1>
+            <p>The awesome sauce Discord replacement.</p>
+        </div>
         <div class="features">
             <div class="feature">
+                <i class="feature-icon fas fa-comments"></i>
                 <h2>Instant Messaging</h2>
-                <p>Stay connected with your friends and colleagues through our instant messaging feature.</p>
+                <p>Stay connected with friends and colleagues via instant messaging.</p>
             </div>
             <div class="feature">
-                <h2>Voice Chat</h2>
-                <p>Connect with others through voice chats, just like in-person conversations.</p>
+                <i class="feature-icon fas fa-code"></i>
+                <h2>Open Source</h2>
+                <p>Pulse is open-source meaning you can look through our code and fix it.</p>
             </div>
             <div class="feature">
-                <h2>Channels</h2>
-                <p>Organize discussions into channels for different topics and interests.</p>
+                <i class="feature-icon fas fa-cogs"></i>
+                <h2>Customizable</h2>
+                <p>Pulse is customizable which means you can make it the way you want.</p>
             </div>
         </div>
         <div>
-            <a href="chats.html" class="register-button">Start Chatting</a>
+            <a href="registration.html" class="register-button">Start Chatting</a>
         </div>
     </div>
 
@@ -219,10 +207,10 @@
         }
 
         if (localStorage.getItem('token')) {
-            document.getElementById('loginLink').classList.add('hidden');
-            document.getElementById('registerLink').classList.add('hidden');
-            document.getElementById('chatsLink').classList.remove('hidden');
-            document.getElementById('signOutButton').classList.remove('hidden');
+            document.getElementById('registerLinkMobile').classList.add('hidden');
+            document.getElementById('loginLinkMobile').classList.add('hidden');
+            document.getElementById('signOutButtonMobile').classList.remove('hidden');
+            document.getElementById('homeLinkMobile').classList.remove('hidden');
         }
     </script>
 </body>

@@ -6,17 +6,18 @@ import hashlib
 import jwt
 
 app = Flask(__name__)
-cors = CORS(app)
+CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 secret_key = "very_important_and_secret_key"
 
-# Load users and clubs from JSON files
+# Load users and clubs from data.json
 try:
     with open("data.json", "r") as file:
         data = json.load(file)
 except (FileNotFoundError, ValueError):
     data = {"users": {}, "clubs": []}
 
+# Helper functions
 def generate_token(myid):
     payload = {
         'exp': time.time() + 1800,
@@ -26,13 +27,18 @@ def generate_token(myid):
     return jwt.encode(payload, secret_key, algorithm='HS256')
 
 def validate_token(myid, token):
-    decoded_token = jwt.decode(token, secret_key, algorithms='HS256')
-    curr_time = time.time()
-    if float(decoded_token["exp"]) <= float(curr_time) or int(decoded_token["myid"]) != int(myid):
-        print(decoded_token["exp"], curr_time, decoded_token["myid"], myid)
+    try:
+        decoded_token = jwt.decode(token, secret_key, algorithms='HS256')
+        curr_time = time.time()
+        if float(decoded_token["exp"]) <= curr_time or int(decoded_token["myid"]) != myid:
+            return 401
+        return 200
+    except jwt.ExpiredSignatureError:
         return 401
-    return 200
+    except jwt.InvalidTokenError:
+        return 401
 
+# Routes
 @app.route("/register", methods=["POST"])
 @cross_origin()
 def register():
@@ -48,7 +54,9 @@ def register():
     data["users"][username] = {
         "email": email,
         "password": hash_password,
-        "decks": {"Japanese": [{"front": "Hello", "back": "World"}, {"front": "Foo", "back": "Bar"}, {"front": "Front", "back": "Back"}], "French": [{"front": "Bonjour", "back": "World"}, {"front": "Goodies", "back": "Bar"}, {"front": "Frontier", "back": "Back"}], "Bulgarian" : [{"front": "Zdrasti", "back": "Svqt"}, {"front": "Bla", "back": "Bar"}, {"front": "Otpred", "back": "Otzad"}]},
+        "decks": {"Japanese": [{"front": "Hello", "back": "World"}, {"front": "Foo", "back": "Bar"}, {"front": "Front", "back": "Back"}],
+                  "French": [{"front": "Bonjour", "back": "World"}, {"front": "Goodies", "back": "Bar"}, {"front": "Frontier", "back": "Back"}],
+                  "Bulgarian": [{"front": "Zdrasti", "back": "Svqt"}, {"front": "Bla", "back": "Bar"}, {"front": "Otpred", "back": "Otzad"}]},
         "description": ""
     }
 
@@ -75,14 +83,14 @@ def login():
     if hash_password != user["password"]:
         return "Incorrect password", 401
 
-    myid = int(list(data["users"].keys()).index(username))
+    myid = list(data["users"].keys()).index(username)
     return jsonify({"token": generate_token(myid), "myid": myid})
 
 @app.route("/regenerate_token", methods=["POST"])
 @cross_origin()
 def regenerate_token():
     req_data = request.get_json()
-    myid = req_data.get("myid")  # Use get() to safely retrieve myid
+    myid = req_data.get("myid")
     token = req_data.get("token")
 
     if myid is None:
@@ -109,30 +117,26 @@ def send_message():
     myid = int(req_data["myid"])
     clubname = req_data["clubname"]
     message = req_data["message"]
-    try:
-        token = req_data["token"]
-        valid_code = validate_token(myid, token)
-    except:
+    token = req_data.get("token")
+
+    if token is None:
         return "Token cannot be found", 401
-    
+
+    valid_code = validate_token(myid, token)
     if valid_code != 200:
-        return "Unknown error occurred", valid_code
-    
+        return "Invalid token or myid", valid_code
+
     if clubname not in data["clubs"]:
         return "Club not found", 404
 
-    clubdata = {}
-    try:
-        with open(clubname + ".json", "r") as file:
-            clubdata = json.load(file)
-    except FileNotFoundError:
-        pass
+    if "messages" not in data:
+        data["messages"] = []
 
     timestamp = time.time()
-    clubdata["messages"].append({"myid": myid, "message": message, "timestamp": timestamp})
+    data["messages"].append({"myid": myid, "clubname": clubname, "message": message, "timestamp": timestamp})
 
-    with open(clubname + ".json", "w") as file:
-        json.dump(clubdata, file)
+    with open("data.json", "w") as file:
+        json.dump(data, file)
 
     return jsonify({"myid": myid, "message": message, "timestamp": timestamp})
 
@@ -142,30 +146,23 @@ def get_message():
     req_data = request.get_json()
     clubname = req_data["clubname"]
     last_msg_ts = float(req_data["last_msg_ts"])
-    print(last_msg_ts)
     myid = int(req_data["myid"])
-    try:
-        token = req_data["token"]
-        valid_code = validate_token(myid, token)
-    except:
+    token = req_data.get("token")
+
+    if token is None:
         return "Token cannot be found", 401
-    
+
+    valid_code = validate_token(myid, token)
     if valid_code != 200:
-        return "Unknown error occurred", valid_code
-    
+        return "Invalid token or myid", valid_code
+
     if clubname not in data["clubs"]:
         return "Club not found", 404
-    clubdata = {}
-    try:
-        with open(clubname + ".json", "r") as file:
-            clubdata = json.load(file)
-    except FileNotFoundError:
-        pass
-    msgs = []
-    for message in clubdata["messages"]:
-        if float(message["timestamp"]) > last_msg_ts:
-            msgs.append(message)
-    return jsonify(msgs)
+
+    messages = data.get("messages", [])
+    new_messages = [msg for msg in messages if msg["clubname"] == clubname and msg["timestamp"] > last_msg_ts]
+
+    return jsonify(new_messages)
 
 @app.route("/get_clubs", methods=["GET"])
 @cross_origin()
@@ -177,10 +174,11 @@ def get_clubs():
 def create_club():
     req_data = request.get_json()
     clubname = req_data["clubname"]
-    myid = int(req_data["myid"])
+
+    if clubname in data["clubs"]:
+        return "Club already exists", 400
+
     data["clubs"].append(clubname)
-    with open(clubname + ".json", "w") as file:
-        json.dump({"messages": []}, file)
     with open("data.json", "w") as file:
         json.dump(data, file)
     return jsonify(data["clubs"])
@@ -191,24 +189,26 @@ def add_user_to_club():
     req_data = request.get_json()
     clubname = req_data["clubname"]
     myid = int(req_data["myid"])
-    try:
-        token = req_data["token"]
-        valid_code = validate_token(myid, token)
-    except:
+    token = req_data.get("token")
+
+    if token is None:
         return "Token cannot be found", 401
 
+    valid_code = validate_token(myid, token)
     if valid_code != 200:
-        return "Unknown error occurred", valid_code
-    
-    for clubs in clubname:
-        if clubs not in data["clubs"]:
-            return "Club not found", 404
-        else:
-            data["users"][list(data["users"].keys())[myid]]["hobbies"].append(clubs)
-    usr_dict = data["users"][list(data["users"].keys())[myid]]
-    usr_dict["username"] = list(data["users"].keys())[myid]
+        return "Invalid token or myid", valid_code
+
+    if clubname not in data["clubs"]:
+        return "Club not found", 404
+
+    user_key = list(data["users"].keys())[myid]
+    data["users"][user_key].setdefault("hobbies", []).append(clubname)
+
     with open("data.json", "w") as file:
         json.dump(data, file)
+
+    usr_dict = data["users"][user_key]
+    usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
 @app.route("/add_description_to_user", methods=["POST"])
@@ -217,41 +217,52 @@ def add_description_to_user():
     req_data = request.get_json()
     myid = int(req_data["myid"])
     description = req_data["description"]
-    try:
-        token = req_data["token"]
-        valid_code = validate_token(myid, token)
-    except:
+    token = req_data.get("token")
+
+    if token is None:
         return "Token cannot be found", 401
-    
+
+    valid_code = validate_token(myid, token)
     if valid_code != 200:
-        return "Unknown error occurred", valid_code
-    data["users"][list(data["users"].keys())[myid]]["description"] = description
+        return "Invalid token or myid", valid_code
+
+    user_key = list(data["users"].keys())[myid]
+    data["users"][user_key]["description"] = description
+
     with open("data.json", "w") as file:
         json.dump(data, file)
-    return jsonify(data["users"][list(data["users"].keys())[myid]])
+    return jsonify(data["users"][user_key])
 
 @app.route("/get_user", methods=["POST"])
 @cross_origin()
 def get_user():
     req_data = request.get_json()
-    myid = int(req_data["myid"])    
-    usr_dict = data["users"][list(data["users"].keys())[myid]]
-    usr_dict["username"] = list(data["users"].keys())[myid]
+    myid = int(req_data["myid"])
+    user_key = list(data["users"].keys())[myid]
+    usr_dict = data["users"][user_key]
+    usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
 @app.route("/get_user_via_token", methods=["POST"])
 @cross_origin()
 def get_user_via_token():
     req_data = request.get_json()
-    try:
-        token = req_data["token"]
-        decoded = jwt.decode(token, secret_key, algorithms='HS256')
-    except:
+    token = req_data.get("token")
+
+    if token is None:
         return "Token cannot be found", 401
+
+    try:
+        decoded = jwt.decode(token, secret_key, algorithms='HS256')
+    except jwt.ExpiredSignatureError:
+        return "Token has expired", 401
+    except jwt.InvalidTokenError:
+        return "Invalid token", 401
+
     myid = int(decoded["myid"])
-    
-    usr_dict = data["users"][list(data["users"].keys())[myid]]
-    usr_dict["username"] = list(data["users"].keys())[myid]
+    user_key = list(data["users"].keys())[myid]
+    usr_dict = data["users"][user_key]
+    usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
 @app.route("/get_decks", methods=["POST"])
@@ -259,16 +270,17 @@ def get_user_via_token():
 def get_decks():
     req_data = request.get_json()
     myid = int(req_data["myid"])
-    try:
-        token = req_data["token"]
-        valid_code = validate_token(myid, token)
-    except:
-        return "Token cannot be found", 401
-    
-    if valid_code != 200:
-        return "Unknown error occurred", valid_code
+    token = req_data.get("token")
 
-    return jsonify(data["users"][list(data["users"].keys())[myid]]["decks"])
+    if token is None:
+        return "Token cannot be found", 401
+
+    valid_code = validate_token(myid, token)
+    if valid_code != 200:
+        return "Invalid token or myid", valid_code
+
+    user_key = list(data["users"].keys())[myid]
+    return jsonify(data["users"][user_key]["decks"])
 
 @app.route("/set_decks", methods=["POST"])
 @cross_origin()
@@ -276,19 +288,21 @@ def set_decks():
     req_data = request.get_json()
     decks = req_data["decks"]
     myid = int(req_data["myid"])
-    try:
-        token = req_data["token"]
-        valid_code = validate_token(myid, token)
-    except:
+    token = req_data.get("token")
+
+    if token is None:
         return "Token cannot be found", 401
-    
+
+    valid_code = validate_token(myid, token)
     if valid_code != 200:
-        return "Unknown error occurred", valid_code
-    
-    data["users"][list(data["users"].keys())[myid]]["decks"] = decks
+        return "Invalid token or myid", valid_code
+
+    user_key = list(data["users"].keys())[myid]
+    data["users"][user_key]["decks"] = decks
+
     with open("data.json", "w") as file:
         json.dump(data, file)
-    return jsonify(data["users"][list(data["users"].keys())[myid]]["decks"])
+    return jsonify(data["users"][user_key]["decks"])
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
