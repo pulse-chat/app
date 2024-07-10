@@ -40,7 +40,6 @@ def validate_token(myid, token):
     except jwt.InvalidTokenError:
         return 401
 
-# Blueprint for API routes
 api = Blueprint('api', __name__, url_prefix='/api')
 
 @api.route("/register", methods=["POST"])
@@ -266,8 +265,7 @@ def get_user_via_token():
     usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
-# Routes for rendering templates
-@app.route('/', methods=['GET'])  # Define a route for the root URL
+@app.route('/', methods=['GET'])
 def render_home():
     return render_template('index.html')
 
@@ -279,11 +277,9 @@ def render_login_template():
 def render_register_template():
     return render_template('register.html')
     
-# Serve static files (if needed)
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
 
-# Run the application
 if __name__ == "__main__":
     app.run(debug=True)
