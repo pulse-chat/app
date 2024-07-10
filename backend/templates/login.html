@@ -38,7 +38,7 @@
             const password = document.getElementById("password").value;
 
             try {
-                const response = await fetch("/login", {
+                const response = await fetch("api/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -57,7 +57,7 @@
                 const data = await response.json();
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("myid", data.myid);
-                window.location.href = "index.html"; // Redirect to dashboard or any other page
+                window.location.href = "index.html";
             } catch (error) {
                 alert("Login failed: " + error.message);
             }
