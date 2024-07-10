@@ -4,155 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PulseChat</title>
-    <style>
-        body {
-            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-            color: #e5e7eb;
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.3s ease;
-        }
-
-        .navbar {
-            background-color: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 700px;
-            max-width: 90%;
-            border-radius: 100px;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 80px;
-            padding: 0 20px;
-        }
-
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-brand img {
-            height: 50px;
-            width: auto;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .navbar-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .navbar-links a {
-            color: #e5e7eb;
-            padding: 12px 24px;
-            border-radius: 50px;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            font-size: 1.15rem;
-        }
-
-        .navbar-links a#registerLink {
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .navbar-links a#registerLink:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .feature-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .feature-header h1 {
-            font-size: 4rem;
-            font-weight: bold;
-            margin-bottom: 0.25rem;
-            background: linear-gradient(to bottom, #ffffff, #dddddd);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-header p {
-            font-size: 1.25rem;
-        }
-
-        .features-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            flex-grow: 1;
-        }
-
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .feature {
-            background-color: #1e293b;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 250px;
-            text-align: center;
-            margin-bottom: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 0rem;
-        }
-
-        .feature h2 {
-            font-size: 1.20rem;
-            margin-bottom: -0.5rem;
-        }
-
-        .feature p {
-            font-size: 1.05rem;
-        }
-
-        .register-button {
-            background-color: rgba(0, 0, 0, 0.4);
-            color: #ffffff;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1.25rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 2rem;
-            text-decoration: none;
-        }
-
-        .register-button:hover {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-    </style>
+    <link rel="stylesheet" href="index.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -197,6 +49,11 @@
     </div>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('loaded');
+        });
+
         function toggleMenu() {
             document.getElementById('menu').classList.toggle('hidden');
         }

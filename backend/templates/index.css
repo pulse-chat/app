@@ -1,0 +1,176 @@
+:root {
+    --background-color-light: #ffffff25;
+    --text-color-light: #ffffff;
+    --navbar-bg-color-light: #ffffff25;
+    --button-bg-color-light: #007bff;
+    --button-text-color-light: #ffffff;
+    --feature-bg-color-light: #1e293b;
+    --feature-text-color-light: #000000;
+    --gradient-light: linear-gradient(135deg, #628AC3 0%, #3C4E74 100%);
+}
+
+body {
+    background: var(--gradient-light);
+    color: var(--text-color-light);
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar {
+    background-color: var(--navbar-bg-color-light);
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    max-width: 90%;
+    border-radius: 50px;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    padding: 0 20px;
+    opacity: 1;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar-brand img {
+    height: 50px;
+    width: auto;
+    margin-right: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.navbar-brand img:hover {
+    transform: scale(1.1);
+}
+
+.navbar-links a {
+    color: var(--text-color-light);
+    padding: 12px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1.15rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links a#registerLink {
+    background-color: var(--button-bg-color-light);
+    color: var(--button-text-color-light);
+}
+
+.navbar-links a#registerLink:hover {
+    background-color: rgba(0, 123, 255, 0.8);
+    color: #ffffff;
+    transform: scale(1.05);
+}
+
+.feature-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    opacity: 1;
+}
+
+.feature-header h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    background: linear-gradient(to bottom, #ffffff, #dddddd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-header h1:hover {
+    transform: scale(1.02);
+}
+
+.feature-header p {
+    font-size: 1.25rem;
+}
+
+.features-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-grow: 1;
+    opacity: 1;
+}
+
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.feature {
+    background-color: var(--background-color-light);
+    color: var(--text-color-light);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: center;
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 0;
+    transition: transform 0.3s ease;
+}
+
+.feature:hover .feature-icon {
+    transform: scale(1.2);
+}
+
+.feature h2 {
+    font-size: 1.20rem;
+    margin-bottom: -0.5rem;
+}
+
+.feature p {
+    font-size: 1.05rem;
+}
+
+.register-button {
+    background-color: var(--button-bg-color-light);
+    color: var(--button-text-color-light);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 2rem;
+    text-decoration: none;
+}
+
+.register-button:hover {
+    background-color: rgba(0, 123, 255, 0.8);
+    transform: scale(1.05);
+}
