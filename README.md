@@ -1,3 +1,3 @@
 # Pulse
-> [!NOTE]
-> This is based off a private project called TUESConnect. This is still a WIP and being worked on.
+> [!WARNING]
+> This shouldn't be used in production *yet*.
