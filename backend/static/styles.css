@@ -109,7 +109,7 @@ body {
     text-align: center;
     flex-grow: 1;
     opacity: 1;
-    padding: 2rem; /* Added padding for better spacing */
+    padding: 2rem;
 }
 
 .features {
