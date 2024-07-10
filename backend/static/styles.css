@@ -6,7 +6,7 @@
     --button-text-color-light: #ffffff;
     --feature-bg-color-light: #1e293b;
     --feature-text-color-light: #000000;
-    --gradient-light: linear-gradient(135deg, #628AC3 0%, #3C4E74 100%);
+    --gradient-light: linear-gradient(135deg, #7B65FF 0%, #0D005E 100%);
 }
 
 body {
@@ -16,7 +16,7 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -109,6 +109,7 @@ body {
     text-align: center;
     flex-grow: 1;
     opacity: 1;
+    padding: 2rem; /* Added padding for better spacing */
 }
 
 .features {
@@ -173,4 +174,69 @@ body {
 .register-button:hover {
     background-color: rgba(0, 123, 255, 0.8);
     transform: scale(1.05);
+}
+
+.login-container {
+    background-color: #ffffff75;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 360px;
+    width: 100%;
+    margin: 20px;
+}
+
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.login-form img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    height: 50px;
+}
+
+.login-form .input-group {
+    margin-bottom: 15px;
+}
+
+.login-form .input-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.login-form .input-group input {
+    width: calc(100% - 24px);
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f7f7f790;
+    transition: border-color 0.3s ease;
+}
+
+.login-form .input-group input:focus {
+    outline: none;
+    border-color: var(--button-bg-color-light);
+}
+
+.login-form button {
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--button-bg-color-light);
+    color: var(--button-text-color-light);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+    background-color: rgba(0, 123, 255, 0.8);
 }
