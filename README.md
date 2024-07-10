@@ -1,4 +1,3 @@
-# TUESConnect
-
+# Pulse
 > [!NOTE]
-> Dont use this unless you wanna fix it up
+> This is based off a private project called TUESConnect. This is still a WIP and being worked on.
