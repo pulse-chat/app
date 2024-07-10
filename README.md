@@ -1,5 +1,5 @@
 # Pulse
 > [!WARNING]
 > This shouldn't be used in production *yet*.
-> [!INFO]
-> This is based off a private project called TUESconnect.
+---
+### Pulse is a simple replacement for Discord made in Python using Flask.
