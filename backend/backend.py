@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, send_from_directory
+from flask import Flask, request, jsonify, render_template, send_from_directory, Blueprint
 from flask_cors import CORS, cross_origin
 import json
 import time
@@ -40,16 +40,10 @@ def validate_token(myid, token):
     except jwt.InvalidTokenError:
         return 401
 
-# Routes
-@app.route("/")
-def index():
-    return render_template("index.html")
+# Blueprint for API routes
+api = Blueprint('api', __name__, url_prefix='/api')
 
-@app.route("/login")
-def login():
-    return render_template("login.html")
-
-@app.route("/register", methods=["POST"])
+@api.route("/register", methods=["POST"])
 @cross_origin()
 def register():
     req_data = request.get_json()
@@ -72,7 +66,7 @@ def register():
 
     return jsonify(list(data["users"].keys()))
 
-@app.route("/login", methods=["POST"])
+@api.route("/login", methods=["POST"])
 @cross_origin()
 def login_user():
     req_data = request.get_json()
@@ -93,7 +87,7 @@ def login_user():
     myid = list(data["users"].keys()).index(username)
     return jsonify({"token": generate_token(myid), "myid": myid})
 
-@app.route("/regenerate_token", methods=["POST"])
+@api.route("/regenerate_token", methods=["POST"])
 @cross_origin()
 def regenerate_token():
     req_data = request.get_json()
@@ -117,7 +111,7 @@ def regenerate_token():
 
     return jsonify({"token": generate_token(myid), "myid": myid})
 
-@app.route("/send_message", methods=["POST"])
+@api.route("/send_message", methods=["POST"])
 @cross_origin()
 def send_message():
     req_data = request.get_json()
@@ -147,7 +141,7 @@ def send_message():
 
     return jsonify({"myid": myid, "message": message, "timestamp": timestamp})
 
-@app.route("/get_message", methods=["POST"])
+@api.route("/get_message", methods=["POST"])
 @cross_origin()
 def get_message():
     req_data = request.get_json()
@@ -171,12 +165,12 @@ def get_message():
 
     return jsonify(new_messages)
 
-@app.route("/get_clubs", methods=["GET"])
+@api.route("/get_clubs", methods=["GET"])
 @cross_origin()
 def get_clubs():
     return jsonify(data["clubs"])
 
-@app.route("/create_club", methods=["POST"])
+@api.route("/create_club", methods=["POST"])
 @cross_origin()
 def create_club():
     req_data = request.get_json()
@@ -190,7 +184,7 @@ def create_club():
         json.dump(data, file)
     return jsonify(data["clubs"])
 
-@app.route("/add_user_to_club", methods=["POST"])
+@api.route("/add_user_to_club", methods=["POST"])
 @cross_origin()
 def add_user_to_club():
     req_data = request.get_json()
@@ -218,7 +212,7 @@ def add_user_to_club():
     usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
-@app.route("/add_description_to_user", methods=["POST"])
+@api.route("/add_description_to_user", methods=["POST"])
 @cross_origin()
 def add_description_to_user():
     req_data = request.get_json()
@@ -240,7 +234,7 @@ def add_description_to_user():
         json.dump(data, file)
     return jsonify(data["users"][user_key])
 
-@app.route("/get_user", methods=["POST"])
+@api.route("/get_user", methods=["POST"])
 @cross_origin()
 def get_user():
     req_data = request.get_json()
@@ -250,7 +244,7 @@ def get_user():
     usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
-@app.route("/get_user_via_token", methods=["POST"])
+@api.route("/get_user_via_token", methods=["POST"])
 @cross_origin()
 def get_user_via_token():
     req_data = request.get_json()
@@ -272,9 +266,24 @@ def get_user_via_token():
     usr_dict["username"] = user_key
     return jsonify(usr_dict)
 
+# Routes for rendering templates
+@app.route('/', methods=['GET'])  # Define a route for the root URL
+def render_home():
+    return render_template('index.html')
+
+@app.route('/login', methods=['GET'])
+def render_login_template():
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET'])
+def render_register_template():
+    return render_template('register.html')
+    
+# Serve static files (if needed)
 @app.route('/static/<path:path>')
 def send_static(path):
     return send_from_directory('static', path)
 
+# Run the application
 if __name__ == "__main__":
     app.run(debug=True)
