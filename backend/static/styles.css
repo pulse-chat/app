@@ -1,16 +1,14 @@
 :root {
-    --background-color-light: #ffffff25;
+    --background-color-light: #0c0c0c;
     --text-color-light: #ffffff;
-    --navbar-bg-color-light: #ffffff25;
-    --button-bg-color-light: #007bff;
-    --button-text-color-light: #ffffff;
-    --feature-bg-color-light: #1e293b;
-    --feature-text-color-light: #000000;
-    --gradient-light: linear-gradient(135deg, #7B65FF 0%, #0D005E 100%);
+    --button-bg-color-light: #181818;
+    --button-text-color-light: #fff;
+    --feature-bg-color-light: #181818;
+    --feature-text-color-light: #ffffff;
 }
 
 body {
-    background: var(--gradient-light);
+    background: var(--background-color-light);
     color: var(--text-color-light);
     font-family: 'Montserrat', sans-serif;
     line-height: 1.6;
@@ -23,12 +21,40 @@ body {
     align-items: center;
 }
 
+.grid {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / 20px 20px;
+    z-index: 1;
+    opacity: 0.5;
+    box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(255, 255, 255, 0.6);
+}
+
+.grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(10px);
+    opacity: 0.6;
+    z-index: -1;
+}
+
 .navbar {
-    background-color: var(--navbar-bg-color-light);
+    background-color: var(--button-bg-color-light);
     position: fixed;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     width: 700px;
     max-width: 90%;
     border-radius: 50px;
@@ -61,7 +87,11 @@ body {
     border-radius: 50px;
     text-decoration: none;
     font-size: 1.15rem;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: transform 0.3s ease;
+}
+
+.navbar-links a:hover {
+    transform: scale(1.1);
 }
 
 .navbar-links a#registerLink {
@@ -70,14 +100,12 @@ body {
 }
 
 .navbar-links a#registerLink:hover {
-    background-color: rgba(0, 123, 255, 0.8);
-    color: #ffffff;
     transform: scale(1.05);
 }
 
 .feature-header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     opacity: 1;
 }
 
@@ -90,15 +118,11 @@ body {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.feature-header h1:hover {
-    transform: scale(1.02);
 }
 
 .feature-header p {
-    font-size: 1.25rem;
+    margin-top: 0.35rem;
+    font-size: 1.45rem;
 }
 
 .features-container {
@@ -108,36 +132,36 @@ body {
     align-items: center;
     text-align: center;
     flex-grow: 1;
-    opacity: 1;
     padding: 2rem;
 }
 
 .features {
     display: flex;
     justify-content: center;
-    gap: 2rem;
+    gap: 1rem;
+    margin-top: 1rem;
     flex-wrap: wrap;
 }
 
 .feature {
-    background-color: var(--background-color-light);
-    color: var(--text-color-light);
+    background-color: var(--feature-bg-color-light);
+    color: var(--feature-text-color-light);
     padding: 1.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
     width: 250px;
     text-align: center;
-    margin-bottom: 2rem;
     display: flex;
+    margin-top: 1rem;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .feature-icon {
@@ -162,7 +186,7 @@ body {
 .register-button {
     background-color: var(--button-bg-color-light);
     color: var(--button-text-color-light);
-    padding: 1rem 2rem;
+    padding: 0.75rem 1.5rem;
     border-radius: 50px;
     font-size: 1.25rem;
     cursor: pointer;
@@ -172,73 +196,6 @@ body {
 }
 
 .register-button:hover {
-    background-color: rgba(0, 123, 255, 0.8);
+    background-color: rgb(240, 240, 240);
     transform: scale(1.05);
-}
-
-.login-container {
-    background-color: #ffffff60;
-    padding: 20px;
-    border-radius: 24px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 360px;
-    width: 100%;
-    margin: 20px;
-}
-
-.login-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #fff;
-}
-
-.login-form img {
-    display: block;
-    margin: 0 auto;
-    width: auto;
-    height: 50px;
-}
-
-.login-form .input-group {
-    margin-bottom: 15px;
-}
-
-.login-form .input-group label {
-    display: block;
-    margin-bottom: 5px;
-    color: #fff;
-}
-
-.login-form .input-group input {
-    font-family: 'Montserrat', sans-serif;
-    border: 1px solid #00000050;
-    width: calc(100% - 24px);
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 32px;
-    background-color: #f7f7f780;
-    transition: border-color 0.3s ease;
-}
-
-.login-form .input-group input:focus {
-    outline: none;
-    border-color: var(--button-bg-color-light);
-}
-
-.login-form button {
-    font-family: 'Montserrat', sans-serif;
-    width: 100%;
-    padding: 12px;
-    background-color: var(--button-bg-color-light);
-    color: var(--button-text-color-light);
-    border: none;
-    border-radius: 32px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.login-form button:hover {
-    background-color: rgba(0, 123, 255, 0.8);
 }
