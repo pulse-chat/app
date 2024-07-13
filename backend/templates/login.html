@@ -14,7 +14,7 @@
 <body>
     <div class="grid"></div>
     <div class="login-container">
-        <form class="login-form" id="loginForm">
+        <form class="login-form" id="loginForm" action="#" method="post">
             <img src="../static/logopulse.png" alt="Logo">
             <h3 align="center">Login</h3>
             <div class="input-group">
@@ -26,42 +26,5 @@
             <button type="submit">Login</button>
         </form>
     </div>
-
-    <script>
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            loginUser();
-        });
-
-        async function loginUser() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-
-            try {
-                const response = await fetch("api/login", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorMessage = await response.text();
-                    throw new Error(errorMessage);
-                }
-
-                const data = await response.json();
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("myid", data.myid);
-                window.location.href = "index.html";
-            } catch (error) {
-                alert("Login failed: " + error.message);
-            }
-        }
-    </script>
 </body>
 </html>
