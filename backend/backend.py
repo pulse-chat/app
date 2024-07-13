@@ -4,9 +4,9 @@ from bson.objectid import ObjectId
 import hashlib
 
 app = Flask(__name__)
-app.secret_key = "TESTING_123"
+app.secret_key = "TEST_KEY"
 
-mongo_pass = "pass_here_123"
+mongo_pass = "TEST_PASS"
 client = pymongo.MongoClient(f"mongodb://usr:{mongo_pass}@ip/")
 db = client["pulse"]
 users = db["users"]
@@ -27,15 +27,13 @@ def collectionToList(collection):
     return list(collection.find({}))
 
 def showError(message, redirect):
-    #nuh uh rn
-    return f"<h1>{message}</h1><p><a href='{redirect}'>Back</a></p>"
+    return f"<h1>{message}</h1><p><a href='{redirect}'>Go Back</a></p>"
 
 @app.route("/",methods=["GET"])
 def index():
     return render_template("index.html")
 
 # User management
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if not request.method == "POST":
@@ -45,7 +43,7 @@ def login():
         password = toHash(request.form.get('password'))
         user = users.find_one({"username": username})
     except:
-        return showError(message="Unable to find user", redirect="/login")
+        return showError(message="Unable to find user.", redirect="/login")
     if user != None and user["password"] == password:
         session["id"] = str(user["_id"])
         return redirect("/")
