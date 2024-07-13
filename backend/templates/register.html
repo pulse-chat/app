@@ -14,7 +14,7 @@
 <body>
     <div class="grid"></div>
     <div class="login-container">
-        <form class="login-form" id="registerForm">
+        <form class="login-form" id="registerForm" action="#" method="post">
             <img src="../static/logopulse.png">
             <h3 align="center">Register</h3>
             <div class="input-group">
@@ -29,43 +29,5 @@
             <button type="submit">Register</button>
         </form>
     </div>
-
-    <script>
-        document.getElementById("registerForm").addEventListener("submit", function(event) {
-            event.preventDefault();
-            registerUser();
-        });
-
-        async function registerUser() {
-            const username = document.getElementById("username").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            try {
-                const response = await fetch("api/register", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        email: email,
-                        password: password
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorMessage = await response.text();
-                    throw new Error(errorMessage);
-                }
-
-                const data = await response.json();
-                alert("Registration successful!");
-                window.location.href = "login.html";
-            } catch (error) {
-                alert("Registration failed: " + error.message);
-            }
-        }
-    </script>
 </body>
 </html>
